@@ -1,14 +1,14 @@
 {
-  "name": "sample",
+  "name": "desqui-app",
   "version": "0.1.0",
-  "description": "boilerplate app",
+  "description": "A client app for Desqui",
   "main": "webpack.config.js",
   "scripts": {
     "prestart": "webpack",
     "start": "webpack-dev-server",
     "electron": "electron main.js"
   },
-  "author": "Ean Platter <eanplatter@gmail.com> (eanplatter.github.io)",
+  "author": "Martín Molina <tm07081995@gmail.com> (http://about.me/tomymolina)",
   "license": "ISC",
   "dependencies": {
     "babel-core": "^6.2.1",

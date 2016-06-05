@@ -223,6 +223,8 @@ export default class App extends Component {
             <MenuItem onClick={this.handleImport.bind(this)} key="import">
               Import data
             </MenuItem>
+            <Divider />
+            <MenuItem>by @tomymolina</MenuItem>
           </Drawer>
           <Form currentProfile={this.state.currentProfile} result={this.state.result} isDownloading={this.state.isDownloading} properties={this.state.properties} />
         </div>
