@@ -1,0 +1,23 @@
+{
+    "compilerOptions": {
+        "outDir": "./dist/",
+        "sourceMap": true,
+        "noImplicitAny": true,
+        "module": "commonjs",
+        "target": "es6",
+        "jsx": "react"
+    },
+    "exclude": [
+        "node_modules"
+    ],
+    "filesGlob": [
+        "src/*.ts",
+        "src/*.tsx",
+        "./typings/index.d.ts",
+        "./owntypings/index.d.ts"
+    ],
+    "compileOnSave": false,
+    "atom": {
+        "rewriteTsconfig": false
+    }
+}

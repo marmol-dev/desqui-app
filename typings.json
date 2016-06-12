@@ -1,0 +1,17 @@
+{
+  "dependencies": {
+    "react": "registry:npm/react#15.0.1+20160601175240"
+  },
+  "globalDependencies": {
+    "clone": "registry:dt/clone#0.1.11+20160317120654",
+    "deep-equal": "registry:dt/deep-equal#0.0.0+20160316155526",
+    "flux": "registry:dt/flux#0.0.0+20160608061134",
+    "github-electron": "registry:dt/github-electron#1.2.1+20160602155650",
+    "material-ui": "registry:dt/material-ui#0.15.0+20160608102658",
+    "node": "registry:dt/node#6.0.0+20160608110640",
+    "object-assign": "registry:dt/object-assign#4.0.1+20160316155526",
+    "react": "registry:dt/react#0.14.0+20160602151522",
+    "react-dom": "registry:dt/react-dom#0.14.0+20160412154040",
+    "react-tap-event-plugin": "registry:dt/react-tap-event-plugin#0.0.0+20160602142434"
+  }
+}

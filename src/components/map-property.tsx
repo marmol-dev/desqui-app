@@ -1,8 +1,17 @@
 import * as propertiesActions from '../actions/properties';
-import React , {Component, PropTypes} from 'react';
+import * as React from 'react';
+const {Component, PropTypes} = React;
 import MapInput from '../dummy-components/map-input';
+import assign = require('object-assign');
 
-export default class MapProperty extends Component {
+interface MapPropertyProps {
+  label: string,
+  name: string,
+  value: any,
+  [name: string]: any
+}
+
+export default class MapProperty extends Component<MapPropertyProps, {}> {
 
   static styles = {
     wrapper: {
@@ -12,22 +21,21 @@ export default class MapProperty extends Component {
 
   static propTypes = {
     label: PropTypes.string,
-    hintText: PropTypes.string,
     name: PropTypes.string,
     value: PropTypes.object
   }
 
-  constructor(args){
+  constructor(args: MapPropertyProps){
     super(args);
   }
 
-  onCreate({name, value}){
-    const newValue = Object.assign({}, this.props.value, {[name]: value});
+  onCreate({name, value}: {name: string, value:any}){
+    const newValue = assign({}, this.props.value, {[name]: value});
     propertiesActions.changeProperty(this.props.name, newValue);
   }
 
-  onRemove(name){
-    const newValue = Object.assign({}, this.props.value);
+  onRemove(name: string){
+    const newValue = assign({}, this.props.value);
     delete newValue[name];
     propertiesActions.changeProperty(this.props.name, newValue);
   }
@@ -36,7 +44,6 @@ export default class MapProperty extends Component {
     return (
       <div style={MapProperty.styles.wrapper}>
         <label>{this.props.label}</label>
-        <small>{this.props.hintText}</small>
         <MapInput onCreate={this.onCreate.bind(this)} onRemove={this.onRemove.bind(this)} value={this.props.value} />
       </div>
     );

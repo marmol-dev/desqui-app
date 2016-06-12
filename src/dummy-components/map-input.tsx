@@ -1,17 +1,25 @@
-import React, {Component, PropTypes} from 'react';
+import * as React from 'react';
+const {Component, PropTypes} = React;
 import {TextField, FlatButton} from 'material-ui';
 import MapInputCreate from './map-input-create';
 import MapInputElement from './map-input-element';
 
-export default class MapInput extends Component {
+interface MapInputProps {
+  onCreate: (a: {name: string, value:string}) => any,
+  onRemove: (name: string) => any,
+  value: any,
+  [name: string]: any
+}
+
+export default class MapInput extends Component<MapInputProps, {}> {
 
   static propTypes = {
     onCreate: PropTypes.func,
     onRemove: PropTypes.func,
-    value: PropTypes.object
+    value: PropTypes.object,
   }
 
-  onCreate(element){
+  onCreate(element: {name: string, value: string}){
     this.props.onCreate(element);
   }
 

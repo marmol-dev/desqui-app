@@ -1,12 +1,35 @@
 import Dispatcher from '../dispatcher';
 import {EventEmitter} from 'events';
-import {index} from '../utils';
-import pick from 'object.pick';
-import profilesStore from './profiles';
-import clone from 'clone';
+import pick = require('object.pick');
+import {default as profilesStore, Properties} from './profiles';
+import clone = require('clone');
+import assign = require('object-assign');
 
-class PropertiesStore extends EventEmitter {
-  static getDefaultValue(){
+export interface Result {
+    data?: {
+      dir: string
+    },
+    error?: {
+      message: string
+    }
+}
+
+export interface PropertiesStoreAtributes {
+  _properties: Properties,
+  _isDownloading: boolean,
+  _result?: Result
+}
+
+export interface PropertiesStoreAtributesExport extends PropertiesStoreAtributes {
+  __desqui: boolean
+}
+
+export class PropertiesStore extends EventEmitter {
+  private _properties: Properties;
+  private _isDownloading: boolean;
+  private _result: Result;
+
+  static getDefaultValue() : PropertiesStoreAtributes {
     return {
       _properties : profilesStore.getProfile(0).properties,
       _isDownloading : false,
@@ -15,13 +38,13 @@ class PropertiesStore extends EventEmitter {
   }
 
 
-  constructor(initialValue){
+  constructor(initialValue: PropertiesStoreAtributesExport){
     super();
 
     if (initialValue){
       this.fromJSON(initialValue);
     } else {
-      Object.assign(this, PropertiesStore.getDefaultValue());
+      assign(this, PropertiesStore.getDefaultValue());
     }
   }
 
@@ -43,17 +66,17 @@ class PropertiesStore extends EventEmitter {
     return clone(this._properties);
   }
 
-  set(name, value){
+  set(name: string, value: any){
     this._properties[name] = value;
     this.emit('change');
   }
 
-  setProperties(props){
+  setProperties(props: Properties){
     this._properties = props;
     this.emit('change');
   }
 
-  setResult(result){
+  setResult(result: Result){
     this._result = result;
     this.emit('change');
   }
@@ -63,14 +86,14 @@ class PropertiesStore extends EventEmitter {
   }
 
   clearProperties(){
-    Object.assign(this, PropertiesStore.getDefaultValue());
+    assign(this, PropertiesStore.getDefaultValue());
     this.emit('change');
   }
 
-  handleActions(action){
+  handleActions(action: {type: string}){
     switch(action.type){
       case 'PROPERTY_CHANGE': {
-        this.set(action.propertyName, action.propertyValue);
+        this.set(<string> action['propertyName'],<any> action['propertyValue']);
         break;
       }
       case 'DOWNLOAD_PAGE':
@@ -79,7 +102,7 @@ class PropertiesStore extends EventEmitter {
 
       case 'RECEIVED_DOWNLOAD_RESULT':
         this.clearDownloading();
-        this.setResult(action.result);
+        this.setResult(<Result> action['result']);
         break;
 
       case 'CLEAR_PROPERTIES':
@@ -91,22 +114,22 @@ class PropertiesStore extends EventEmitter {
         break;
 
       case 'IMPORT_DATA_SUCCESS':
-        this.fromJSON(action.data.propertiesStore);
+        this.fromJSON(<PropertiesStoreAtributesExport> action['data']['propertiesStore']);
         break;
     }
   }
 
-  toJSON(){
-    return Object.assign(clone(pick(this, ['_properties', '_isDownloading', '_result'])), {__desqui: true});
+  toJSON(): PropertiesStoreAtributesExport {
+    return assign(clone(pick(this, ['_properties', '_isDownloading', '_result'])), {__desqui: true});
   }
 
-  fromJSON(obj){
+  fromJSON(obj: PropertiesStoreAtributesExport){
     console.log('Importing props form JSON', obj);
 
     if (obj instanceof Object === false || obj.__desqui !== true){
       throw new Error('Invalid data object');
     }
-    Object.assign(this, clone(pick(obj, ['_properties', '_isDownloading', '_result'])));
+    assign(this, clone(pick(obj, ['_properties', '_isDownloading', '_result'])));
     this.emit('change');
   }
 }
@@ -115,7 +138,7 @@ const storage = localStorage.getItem('propertiesStore');
 const initialValue = storage ? JSON.parse(storage) : null;
 const propertiesStore = new PropertiesStore(initialValue);
 
-window.propertiesStore = propertiesStore;
+window['propertiesStore'] = propertiesStore;
 
 propertiesStore.on('change', () => {
   localStorage.setItem('propertiesStore', JSON.stringify(propertiesStore.toJSON()));

@@ -1,10 +1,10 @@
 import dispatcher from '../dispatcher';
 import Desqui from 'desqui';
-import propertiesStore from '../stores/properties';
-import clone from 'clone';
+import propertiesStore, {Result} from '../stores/properties';
+import * as clone from 'clone';
 import * as path from 'path';
 
-export function changeProperty(name, value){
+export function changeProperty(name: string, value: any){
   dispatcher.dispatch({
     type: 'PROPERTY_CHANGE',
     propertyName: name,
@@ -41,7 +41,7 @@ export function downloadPage(){
   )
 }
 
-export function showDownloadResult(result){
+export function showDownloadResult(result: Result){
   dispatcher.dispatch({
     type: 'RECEIVED_DOWNLOAD_RESULT',
     result

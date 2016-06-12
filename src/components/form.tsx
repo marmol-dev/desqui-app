@@ -1,17 +1,30 @@
 import Dispatcher from '../dispatcher';
 import propertiesStore from '../stores/properties';
-import React , {Component, PropTypes} from 'react';
+import * as React from 'react';
+const {PropTypes, Component} = React;
 import MapProperty from './map-property';
 import TextProperty from './text-property';
 import DirectoryProperty from './directory-property';
-import {Paper, RaisedButton, CircularProgress, FlatButton, Dialog, FloatingActionButton, ContentAdd} from 'material-ui';
+import {Paper, RaisedButton, CircularProgress, FlatButton, Dialog, FloatingActionButton} from 'material-ui';
 import * as propertiesAction from '../actions/properties';
 import {updateProfile} from '../actions/profiles';
-import equal from 'deep-equal';
+import * as equal from 'deep-equal';
 import {ProfilesStore} from '../stores/profiles';
 import DownloadIcon from 'material-ui/svg-icons/file/file-download';
+import assign = require( 'object-assign' );
 
-export default class Form extends Component {
+export interface FormProps {
+  properties: any,
+  isDownloading: boolean,
+  result: any,
+  currentProfile: any
+}
+
+export interface FormState {
+
+}
+
+export default class Form extends Component<FormProps, FormState> {
 
   static propTypes = {
     properties: PropTypes.object,
@@ -52,9 +65,8 @@ export default class Form extends Component {
     }
   }
 
-  constructor(args){
+  constructor(args: FormProps){
     super(args);
-    this.styles = this.styles;
   }
 
   onDownload(){
@@ -70,7 +82,7 @@ export default class Form extends Component {
   }
 
   handleSaveProfile(){
-    const profile = Object.assign({}, this.props.currentProfile, {properties: this.props.properties});
+    const profile = assign({}, this.props.currentProfile, {properties: this.props.properties});
     updateProfile(profile);
   }
 
@@ -82,7 +94,7 @@ export default class Form extends Component {
         onTouchTap={this.handleCloseDialog.bind(this)}
       />)];
 
-    let dialog = null;
+    let dialog : any = null;
     if (this.props.result){
       if (this.props.result.error){
         dialog = (

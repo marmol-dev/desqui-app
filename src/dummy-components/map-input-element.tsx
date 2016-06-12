@@ -1,7 +1,15 @@
-import React, {Component, PropTypes} from 'react';
+import * as React from 'react';
+const {Component, PropTypes} = React;
 import {FlatButton} from 'material-ui';
 
-export default class MapInputElement extends Component {
+interface MapInputElementProps {
+  name: string,
+  value: string,
+  onRemove: (name: string) => void,
+  [name: string]: any
+}
+
+export default class MapInputElement extends Component<MapInputElementProps, {}> {
   static propTypes = {
     name: PropTypes.string,
     value: PropTypes.string,

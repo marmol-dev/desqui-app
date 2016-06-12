@@ -1,20 +1,27 @@
 import Dispatcher from '../dispatcher';
 import propertiesStore from '../stores/properties';
-import React , {Component, PropTypes} from 'react';
+import * as React from 'react';
+const {Component, PropTypes} = React;
 import {TextField} from 'material-ui';
 
-export default class TextProperty extends Component {
+interface TextPropertyProps {
+  name: string,
+  value: string,
+  [name: string]: any
+}
+
+export default class TextProperty extends Component<TextPropertyProps, {}> {
 
   static propTypes = {
     name: PropTypes.string,
     value: PropTypes.string,
   }
 
-  constructor(args){
+  constructor(args: TextPropertyProps){
     super(args);
   }
 
-  onChange({target: {value}}){
+  onChange({target: {value}}: {target: {value: string}}){
     Dispatcher.dispatch({
       type: 'PROPERTY_CHANGE',
       propertyName: this.props.name,
@@ -23,13 +30,10 @@ export default class TextProperty extends Component {
   }
 
   render(){
-    const {name, value, ...other} = this.props;
     return (
       <TextField
-          name={name}
-          value={value}
           onChange={this.onChange.bind(this)}
-          {...other} />
+          {...this.props} />
     );
   }
 }

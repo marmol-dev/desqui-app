@@ -1,5 +1,6 @@
-import clone from 'clone';
-import React, {Component} from 'react';
+import clone = require('clone');
+import * as React from 'react';
+const {Component, PropTypes} = React;
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import lightBaseTheme from 'material-ui/styles/baseThemes/lightBaseTheme';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
@@ -10,7 +11,7 @@ import Header from '../dummy-components/header';
 import Form from './form';
 import {Drawer, MenuItem, FlatButton, IconButton, TextField, Divider} from 'material-ui';
 import DeleteIcon from 'material-ui/svg-icons/action/delete';
-import RenameIcon from 'material-ui/svg-icons/editor/title';
+import RenameIcon from 'material-ui/svg-icons/editor/mode-edit';
 import OpenIcon from 'material-ui/svg-icons/action/visibility';
 
 import SaveIcon from 'material-ui/svg-icons/content/save';
@@ -19,16 +20,26 @@ import CancelIcon from 'material-ui/svg-icons/navigation/cancel';
 import {blue500, red500, greenA200} from 'material-ui/styles/colors';
 
 
-import propertiesStore from '../stores/properties';
-import profilesStore, {ProfilesStore} from '../stores/profiles';
+import propertiesStore , {Result} from '../stores/properties';
+import profilesStore, {ProfilesStore, Properties, Profile} from '../stores/profiles';
 
 import {createProfile, openProfile, removeProfile, updateProfile, exportData, importData} from '../actions/profiles';
 
 import * as electron from 'electron';
 const {dialog} = electron.remote;
+import assign = require('object-assign');
 
-export default class App extends Component {
-  constructor(args) {
+interface AppState {
+  properties: Properties,
+  isDownloading: boolean,
+  result: Result,
+  menuOpened: boolean,
+  profiles: Profile[],
+  currentProfile: Profile
+}
+
+export default class App extends Component<{}, AppState> {
+  constructor(args: {}) {
       super(args);
       this.state = {
         properties: propertiesStore.getProperties(),
@@ -58,8 +69,8 @@ export default class App extends Component {
     });
   }
 
-  handleMenu(opened){
-    const newState = Object.assign({}, this.state);
+  handleMenu(opened: boolean){
+    const newState = assign({}, this.state);
     newState.menuOpened = opened;
     this.setState(newState);
   }
@@ -72,39 +83,41 @@ export default class App extends Component {
     createProfile({properties: this.state.properties});
   }
 
-  handleOpenProfile(id){
+  handleOpenProfile(id: number){
     openProfile(id);
   }
 
-  handleRemoveProfile(id){
+  handleRemoveProfile(id: number){
     removeProfile(id);
   }
 
-  handleStartRenamingProfile(id){
+  handleStartRenamingProfile(id: number){
     const profile = profilesStore.getProfile(id);
-    const newProfile = Object.assign(clone(profile), {
+    const newProfile = assign(clone(profile), {
       isEditing: true,
       editingName: profile.name
     });
     updateProfile(newProfile);
   }
 
-  handleUpdateName(id, editingName){
+  handleUpdateName(id: number, e: any){
+    console.log('evento', e);
+    const editingName = e.target.value;
     const profile = profilesStore.getProfile(id);
-    const newProfile = Object.assign(clone(profile),{editingName});
+    const newProfile = assign(clone(profile),{editingName});
     updateProfile(newProfile);
   }
 
-  handleCancelRenaming(id){
+  handleCancelRenaming(id: number){
     const profile = profilesStore.getProfile(id);
-    const newProfile = Object.assign(clone(profile),{isEditing: false});
+    const newProfile = assign(clone(profile),{isEditing: false});
     updateProfile(newProfile);
   }
 
-  handleSaveName(id){
+  handleSaveName(id: number){
     const profile = profilesStore.getProfile(id);
     const name = profile.editingName;
-    const newProfile = Object.assign(clone(profile),{isEditing: false, name});
+    const newProfile = assign(clone(profile),{isEditing: false, name});
     updateProfile(newProfile);
   }
 
@@ -127,7 +140,7 @@ export default class App extends Component {
   }
 
   handleImport(){
-    const opts = {
+    const opts: any = {
       title: 'Import profiles and data',
       filters: [
         {
@@ -138,7 +151,7 @@ export default class App extends Component {
       properties: ['openFile']
     };
 
-    dialog.showOpenDialog(opts, (paths) => {
+    dialog.showOpenDialog(opts, (paths: string[]) => {
       if (paths) {
         importData(paths[0]);
       }
@@ -148,7 +161,7 @@ export default class App extends Component {
   render() {
     const profiles = profilesStore.getProfiles().map(({id, name, isEditing, editingName}) => {
 
-      let buttons;
+      let buttons: any;
 
       const openButton = (
         <IconButton onClick={()=>{this.handleOpenProfile(id)}}>
@@ -198,12 +211,17 @@ export default class App extends Component {
         );
       }
 
+      let item: any = null;
+
+      if (isEditing){
+        item = (<TextField name={id.toString()} value={editingName} onChange={(event) => {this.handleUpdateName(id, event)}}/>);
+      } else {
+        item = (<a onClick={()=>{this.handleOpenProfile(id)}}>{name}</a>);
+      }
+
       return (
         <MenuItem key={id} rightIconButton={buttons}>
-          {!isEditing ?
-            (<a onClick={()=>{this.handleOpenProfile(id)}}>{name}</a>) :
-            (<TextField value={editingName} onChange={e=>{this.handleUpdateName(id, e.target.value)}} id={id.toString()}/>)
-          }
+          {item}
         </MenuItem>
       );
     });

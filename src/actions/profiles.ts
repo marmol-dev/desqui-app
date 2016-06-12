@@ -1,25 +1,25 @@
 import dispatcher from '../dispatcher';
 import Desqui from 'desqui';
-import fs from 'fs';
-import profilesStore from '../stores/profiles';
+import * as fs from 'fs';
+import profilesStore, {ProfilesStore} from '../stores/profiles';
 import propertiesStore from '../stores/properties';
 
 
-export function removeProfile(id){
+export function removeProfile(id: number){
   dispatcher.dispatch({
     type: 'REMOVE_PROFILE',
     id
   });
 }
 
-export function updateProfile(profile){
+export function updateProfile(profile: any){
   dispatcher.dispatch({
     type: 'UPDATE_PROFILE',
     profile
   });
 }
 
-export function createProfile({name, properties}){
+export function createProfile({name, properties} : {name?: string, properties: any}){
   dispatcher.dispatch({
     type: 'CREATE_PROFILE',
     name,
@@ -27,21 +27,14 @@ export function createProfile({name, properties}){
   });
 }
 
-export function openProfile(id){
+export function openProfile(id: number){
   dispatcher.dispatch({
     type: 'OPEN_PROFILE',
     id
   })
 }
 
-export function removeProfile(id){
-  dispatcher.dispatch({
-    type: 'REMOVE_PROFILE',
-    id
-  })
-}
-
-export function exportData(path){
+export function exportData(path: string){
   dispatcher.dispatch({
     type: 'EXPORT_DATA',
     path
@@ -52,7 +45,7 @@ export function exportData(path){
     propertiesStore: propertiesStore.toJSON()
   }
 
-  fs.writeFile(path, JSON.stringify(data), error => {
+  fs.writeFile(path, JSON.stringify(data), (error : Error) => {
     if (error){
       dispatcher.dispatch({
         type: 'EXPORT_DATA_ERROR',
@@ -66,20 +59,20 @@ export function exportData(path){
   })
 }
 
-export function importData(path){
+export function importData(path: string){
   dispatcher.dispatch({
     type: 'IMPORT_DATA',
     path
   });
 
-  fs.readFile(path, (error, txt) => {
+  fs.readFile(path, (error : any, txt: any) => {
     if (error){
       dispatcher.dispatch({
         type: 'IMPORT_DATA_ERROR',
         error
       });
     } else {
-      let data;
+      let data: any;
 
       try {
         data = JSON.parse(txt);

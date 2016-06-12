@@ -1,7 +1,13 @@
-import React, {Component, PropTypes} from 'react';
+import * as React from 'react';
+const {Component, PropTypes} = React;
 import {AppBar} from 'material-ui';
 
-export default class Header extends Component {
+interface HeaderProps {
+  title: string,
+  handleOpenMenu: () => void
+}
+
+export default class Header extends Component<HeaderProps, {}> {
   static propTypes = {
       title: PropTypes.string,
       handleOpenMenu: PropTypes.func

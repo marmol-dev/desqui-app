@@ -15,20 +15,28 @@ module.exports = {
   entry: [
     //'webpack-dev-server/client?http://localhost:8080',
     //'webpack/hot/dev-server',
-    './src/main.js'
+    './src/main.tsx'
   ],
   output: {
     path: 'dist',
     filename: 'index_bundle.js'
   },
+  resolve: {
+      modulesDirectories: ["build", "node_modules"],
+      extensions: ['', '.webpack.js', '.web.js', '.ts', '.tsx', '.js']
+  },
   target: 'node',
   module: {
-    loaders: [
+    /*loaders: [
       {
         test: /\.js$/,
         loader: 'react-hot!babel',
         include: __dirname + '/src'
       }
+    ]*/
+    loaders: [
+      // all files with a `.ts` or `.tsx` extension will be handled by `ts-loader`
+      { test: /\.tsx?$/, loader: 'babel-loader!ts-loader' }
     ]
   },
   externals : [nodeExternals(), 'electron'],

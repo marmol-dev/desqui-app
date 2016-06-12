@@ -1,7 +1,19 @@
-import React, {Component, PropTypes} from 'react';
+import * as React from 'react';
+const {Component, PropTypes} = React;
 import {TextField, FlatButton} from 'material-ui';
+import assign = require('object-assign');
 
-export default class MapInputCreate extends Component {
+interface MapInputCreateProps {
+  onCreate: (a : {name: string, value: string}) => any,
+  [name:string]: any
+}
+
+interface MapInputCreateState {
+  name: string,
+  value: string
+}
+
+export default class MapInputCreate extends Component<MapInputCreateProps, MapInputCreateState> {
 
   static propTypes = {
     onCreate: PropTypes.func
@@ -15,14 +27,14 @@ export default class MapInputCreate extends Component {
     };
   }
 
-  handleChangeName(event){
-    const newState = Object.assign({}, this.state);
+  handleChangeName(event: {target: {value: string}}){
+    const newState = assign({}, this.state);
     newState.name = event.target.value;
     this.setState(newState);
   }
 
-  handleChangeValue(event){
-    const newState = Object.assign({}, this.state);
+  handleChangeValue(event: {target: {value: string}}){
+    const newState = assign({}, this.state);
     newState.value = event.target.value;
     this.setState(newState);
   }
