@@ -22,7 +22,7 @@ export function downloadPage(){
   const randomNumber = Math.floor(Math.random()*9e9);
   const sufixDir = `${currentDateFormated}.${randomNumber}`;
 
-  options.directory = path.join(options.directory, sufixDir)
+  options.directory = path.join(options.directory, sufixDir);
 
   Desqui.createDocument(options).then(
     dir => {

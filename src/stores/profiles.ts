@@ -137,23 +137,23 @@ export class ProfilesStore extends EventEmitter {
   handleActions(action: {type: string}){
     switch (action.type) {
       case 'UPDATE_PROFILE':
-        this.updateProfile(<Profile> action['profile']);
+        this.updateProfile(<Profile> (<any>action)['profile']);
         break;
 
       case 'REMOVE_PROFILE':
-        this.removeProfile(<number> action['id']);
+        this.removeProfile(<number> (<any>action)['id']);
         break;
 
       case 'CREATE_PROFILE':
-        this.createProfile({name: <string>action['name'], properties: <Properties> action['properties']});
+        this.createProfile({name: <string> (<any>action)['name'], properties: <Properties> (<any>action)['properties']});
         break;
 
       case 'OPEN_PROFILE':
-        this.setCurrentProfileId(<number> action['id']);
+        this.setCurrentProfileId(<number> (<any>action)['id']);
         break;
 
       case 'IMPORT_DATA_SUCCESS':
-        this.fromJSON(<ProfilesStoreAtributesExport> action['data']['profilesStore']);
+        this.fromJSON(<ProfilesStoreAtributesExport> (<any>action)['data']['profilesStore']);
         break;
 
     }
@@ -181,7 +181,7 @@ profilesStore.on('change', () => {
   localStorage.setItem('profilesStore', JSON.stringify(profilesStore.toJSON()));
 });
 
-window['profilesStore'] = profilesStore;
+(<any>window)['profilesStore'] = profilesStore;
 
 dispatcher.register(profilesStore.handleActions.bind(profilesStore));
 

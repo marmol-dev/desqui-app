@@ -67,7 +67,7 @@ export class PropertiesStore extends EventEmitter {
   }
 
   set(name: string, value: any){
-    this._properties[name] = value;
+    (<any>this._properties)[name] = value;
     this.emit('change');
   }
 
@@ -93,7 +93,7 @@ export class PropertiesStore extends EventEmitter {
   handleActions(action: {type: string}){
     switch(action.type){
       case 'PROPERTY_CHANGE': {
-        this.set(<string> action['propertyName'],<any> action['propertyValue']);
+        this.set(<string> (<any>action)['propertyName'],<any> (<any>action)['propertyValue']);
         break;
       }
       case 'DOWNLOAD_PAGE':
@@ -102,7 +102,7 @@ export class PropertiesStore extends EventEmitter {
 
       case 'RECEIVED_DOWNLOAD_RESULT':
         this.clearDownloading();
-        this.setResult(<Result> action['result']);
+        this.setResult(<Result> (<any>action)['result']);
         break;
 
       case 'CLEAR_PROPERTIES':
@@ -114,7 +114,7 @@ export class PropertiesStore extends EventEmitter {
         break;
 
       case 'IMPORT_DATA_SUCCESS':
-        this.fromJSON(<PropertiesStoreAtributesExport> action['data']['propertiesStore']);
+        this.fromJSON(<PropertiesStoreAtributesExport> (<any>action)['data']['propertiesStore']);
         break;
     }
   }
@@ -138,7 +138,7 @@ const storage = localStorage.getItem('propertiesStore');
 const initialValue = storage ? JSON.parse(storage) : null;
 const propertiesStore = new PropertiesStore(initialValue);
 
-window['propertiesStore'] = propertiesStore;
+(<any>window)['propertiesStore'] = propertiesStore;
 
 propertiesStore.on('change', () => {
   localStorage.setItem('propertiesStore', JSON.stringify(propertiesStore.toJSON()));
