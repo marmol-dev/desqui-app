@@ -5,9 +5,9 @@ A desktop application to use [Desqui](https://github.com/tomymolina/desqui) usin
 
 1. Install Atom Electron: `npm install -g electron-prebuilt`.
 2. Install Webpack: `npm install -g webpack`.
-3. Install project modules: `npm install`.
 2. Clone this repository: `git clone https://github.com/tomymolina/desqui-app`
-3. Open a terminal in the folder where you cloned the repository.
+3. `cd desqui-app`.
+3. Install project modules: `npm install`.
 4. Run `webpack`.
 4. Run `electron main.js`.
 
